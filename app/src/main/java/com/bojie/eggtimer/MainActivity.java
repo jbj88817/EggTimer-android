@@ -1,10 +1,13 @@
 package com.bojie.eggtimer;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar mSeekBar;
     TextView timeTextView;
     Button mButton;
+    int secondLeft = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +27,50 @@ public class MainActivity extends AppCompatActivity {
         timeTextView = (TextView) findViewById(R.id.tv_time);
         mButton = (Button) findViewById(R.id.button);
 
+        setUpSeekBar();
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mButton.getText() == getString(R.string.btn_go)) {
+                    if (secondLeft <= 0) {
+                        Toast.makeText(getApplicationContext(), "Please set time by using seekBar on the top.", Toast.LENGTH_LONG).show();
+                    } else {
+                        mButton.setBackgroundColor(getResources().getColor(R.color.stopColor));
+                        mButton.setText(getString(R.string.btn_stop));
+                        runningCountdown();
+                        mSeekBar.setEnabled(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private void runningCountdown() {
+        final Handler handler = new Handler();
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                if (secondLeft > 0) {
+                    updateTimeTextview(secondLeft);
+                    secondLeft -= 1000;
+                    handler.postDelayed(this, 1000);
+                } else {
+                    // play music
+                }
+            }
+        };
+        handler.post(run);
+    }
+
+
+    private void setUpSeekBar() {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
 
-                String seekedTime = formatMilliseconds(progress);
-                timeTextView.setText(seekedTime);
+                secondLeft = progress;
+                updateTimeTextview(progress);
             }
 
             @Override
@@ -43,13 +85,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void updateTimeTextview(int progress) {
+        String seekedTime = formatMilliseconds(progress);
+        timeTextView.setText(seekedTime);
+    }
+
+
     private String formatMilliseconds(int millis) {
-        String formated =String.format("%02d:%02d",
+        String formated = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis),
                 TimeUnit.MILLISECONDS.toSeconds(millis) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
         );
         return formated;
     }
+
 
 }

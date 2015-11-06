@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="88dp"
-        android:background="@android:color/holo_green_dark"
+        android:background="@color/startColor"
         android:text="@string/btn_go"/>
 
 
