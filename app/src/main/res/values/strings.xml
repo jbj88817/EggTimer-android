@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EggTimer</string>
+    <string name="btn_go">GO!</string>
 </resources>
