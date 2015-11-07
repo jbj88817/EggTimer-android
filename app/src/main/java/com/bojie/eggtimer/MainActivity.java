@@ -1,5 +1,6 @@
 package com.bojie.eggtimer;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     TextView timeTextView;
     Button mButton;
     int secondLeft = 0;
+    Handler handler;
+    Runnable run;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +44,27 @@ public class MainActivity extends AppCompatActivity {
                         runningCountdown();
                         mSeekBar.setEnabled(false);
                     }
+                } else if (mButton.getText() == getString(R.string.btn_stop)) {
+                    mButton.setBackgroundColor(getResources().getColor(R.color.resetColor));
+                    mButton.setText(getString(R.string.btn_reset));
+                    mSeekBar.setEnabled(true);
+                    handler.removeCallbacksAndMessages(null);
+
+                } else if (mButton.getText() == getString(R.string.btn_reset)) {
+
+                    mButton.setBackgroundColor(getResources().getColor(R.color.startColor));
+                    mButton.setText(getString(R.string.btn_go));
+                    mSeekBar.setProgress(0);
+                    updateTimeTextview(0);
+
                 }
             }
         });
     }
 
     private void runningCountdown() {
-        final Handler handler = new Handler();
-        Runnable run = new Runnable() {
+        handler = new Handler();
+        run = new Runnable() {
             @Override
             public void run() {
                 if (secondLeft > 0) {
@@ -57,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 } else {
                     // play music
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.airhorn);
+                    mediaPlayer.start();
                 }
             }
         };
@@ -71,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
                 secondLeft = progress;
                 updateTimeTextview(progress);
+                if (mButton.getText() == getString(R.string.btn_reset)) {
+                    mButton.setBackgroundColor(getResources().getColor(R.color.startColor));
+                    mButton.setText(getString(R.string.btn_go));
+                }
             }
 
             @Override
