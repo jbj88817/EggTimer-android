@@ -1,4 +1,4 @@
-package com.bojie.eggtimer;
+package com.bojie.timerbo;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;

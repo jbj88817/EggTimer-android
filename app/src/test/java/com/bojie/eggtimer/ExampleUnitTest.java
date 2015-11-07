@@ -1,4 +1,4 @@
-package com.bojie.eggtimer;
+package com.bojie.timerbo;
 
 import org.junit.Test;
 
