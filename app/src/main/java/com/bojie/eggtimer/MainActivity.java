@@ -52,14 +52,19 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (mButton.getText() == getString(R.string.btn_reset)) {
 
-                    mButton.setBackgroundColor(getResources().getColor(R.color.startColor));
-                    mButton.setText(getString(R.string.btn_go));
-                    mSeekBar.setProgress(0);
-                    updateTimeTextview(0);
+                    resetAll();
 
                 }
             }
         });
+    }
+
+    private void resetAll() {
+        mButton.setBackgroundColor(getResources().getColor(R.color.startColor));
+        mButton.setText(getString(R.string.btn_go));
+        mSeekBar.setProgress(0);
+        updateTimeTextview(0);
+        mSeekBar.setEnabled(true);
     }
 
     private void runningCountdown() {
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     // play music
                     MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.airhorn);
                     mediaPlayer.start();
+                    resetAll();
                 }
             }
         };
